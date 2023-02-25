@@ -142,4 +142,36 @@ public class DynamicProxyChartCreatorTest {
         assertTrue(chart instanceof BarChart);
         assertEquals(this.barChart, chart);
     }
+
+    @Test
+    public void testProxyLoadingOfPieChartIsCorrect()
+            throws ClassNotFoundException, NoSuchMethodException, SecurityException,
+            InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        List<Object> params = setUpPieChart();
+        this.factory = new ChartFactoryReflection();
+        this.handler = new ChartInvocationHandler(this.factory);
+        this.creator = new DynamicProxyChartCreator(this.handler);
+
+        var chart = this.creator.getChartObject("org.jfree.chart.charts.PieChart", params);
+
+        assertTrue(chart instanceof JFreeChart);
+        assertTrue(chart instanceof PieChart);
+        assertEquals(this.pieChart, chart);
+    }
+
+    @Test
+    public void testProxyLoadingOfTimeSeriesChartIsCorrect()
+            throws ClassNotFoundException, NoSuchMethodException, SecurityException,
+            InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        List<Object> params = setUpTimeSeriesChart();
+        this.factory = new ChartFactoryReflection();
+        this.handler = new ChartInvocationHandler(this.factory);
+        this.creator = new DynamicProxyChartCreator(this.handler);
+
+        var chart = this.creator.getChartObject("org.jfree.chart.charts.TimeSeriesChart", params);
+
+        assertTrue(chart instanceof JFreeChart);
+        assertTrue(chart instanceof TimeSeriesChart);
+        assertEquals(this.timeSeriesChart, chart);
+    }
 }

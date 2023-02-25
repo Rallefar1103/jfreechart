@@ -5,7 +5,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 
-public class ChartFactoryReflection extends ChartFactory {
+public class ChartFactoryReflection extends ChartFactory implements IReflectionFactory {
     ChartFactoryReflection() {
 
     }

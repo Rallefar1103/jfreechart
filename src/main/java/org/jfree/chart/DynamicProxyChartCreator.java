@@ -16,9 +16,9 @@ public class DynamicProxyChartCreator {
             throws NoSuchMethodException, SecurityException,
             IllegalAccessException, IllegalArgumentException, InvocationTargetException, ClassNotFoundException,
             InstantiationException {
-        ChartFactoryReflection proxyFactory = (ChartFactoryReflection) Proxy.newProxyInstance(
+        IReflectionFactory proxyFactory = (IReflectionFactory) Proxy.newProxyInstance(
                 ChartFactoryReflection.class.getClassLoader(),
-                new Class[] { ChartFactoryReflection.class }, this.handler);
+                new Class[] { IReflectionFactory.class }, this.handler);
 
         Class<?> classObj = Class.forName(chartType);
         Constructor<?> chartConstructor = classObj.getConstructor();
