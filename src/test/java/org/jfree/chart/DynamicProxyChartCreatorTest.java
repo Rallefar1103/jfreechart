@@ -130,7 +130,8 @@ public class DynamicProxyChartCreatorTest {
     @Test
     public void testProxyLoadingOfBarChartIsCorrect()
             throws ClassNotFoundException, NoSuchMethodException, SecurityException,
-            InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+            InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
+            MissingParamsException, InvalidChartNameException {
         List<Object> params = setUpBarChart();
         this.factory = new ChartFactoryReflection();
         this.handler = new ChartInvocationHandler(this.factory);
@@ -144,9 +145,40 @@ public class DynamicProxyChartCreatorTest {
     }
 
     @Test
+    public void testProxyLoadingBarChartWillThrowRuntimExceptionForMissingParams()
+            throws ClassNotFoundException, NoSuchMethodException, SecurityException,
+            InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
+            MissingParamsException, InvalidChartNameException {
+        List<Object> params = new ArrayList<>();
+        this.factory = new ChartFactoryReflection();
+        this.handler = new ChartInvocationHandler(this.factory);
+        this.creator = new DynamicProxyChartCreator(this.handler);
+
+        assertThrows(MissingParamsException.class, () -> {
+            this.creator.getChartObject("org.jfree.chart.charts.BarChart", params);
+        });
+    }
+
+    @Test
+    public void testProxyLoadingBarChartWillThrowRuntimExceptionForIncorrectChartName()
+            throws ClassNotFoundException, NoSuchMethodException, SecurityException,
+            InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
+            MissingParamsException, InvalidChartNameException {
+        List<Object> params = new ArrayList<>();
+        this.factory = new ChartFactoryReflection();
+        this.handler = new ChartInvocationHandler(this.factory);
+        this.creator = new DynamicProxyChartCreator(this.handler);
+
+        assertThrows(InvalidChartNameException.class, () -> {
+            this.creator.getChartObject("org.jfree.chart.charts.Bar", params);
+        });
+    }
+
+    @Test
     public void testProxyLoadingOfPieChartIsCorrect()
             throws ClassNotFoundException, NoSuchMethodException, SecurityException,
-            InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+            InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
+            MissingParamsException, InvalidChartNameException {
         List<Object> params = setUpPieChart();
         this.factory = new ChartFactoryReflection();
         this.handler = new ChartInvocationHandler(this.factory);
@@ -160,9 +192,41 @@ public class DynamicProxyChartCreatorTest {
     }
 
     @Test
+    public void testProxyLoadingPieChartWillThrowRuntimExceptionForMissingParams()
+            throws ClassNotFoundException, NoSuchMethodException, SecurityException,
+            InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
+            MissingParamsException, InvalidChartNameException {
+        List<Object> params = new ArrayList<>();
+        this.factory = new ChartFactoryReflection();
+        this.handler = new ChartInvocationHandler(this.factory);
+        this.creator = new DynamicProxyChartCreator(this.handler);
+
+        assertThrows(MissingParamsException.class, () -> {
+            this.creator.getChartObject("org.jfree.chart.charts.PieChart", params);
+        });
+
+    }
+
+    @Test
+    public void testProxyLoadingPieChartWillThrowRuntimExceptionForIncorrectChartName()
+            throws ClassNotFoundException, NoSuchMethodException, SecurityException,
+            InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
+            MissingParamsException, InvalidChartNameException {
+        List<Object> params = new ArrayList<>();
+        this.factory = new ChartFactoryReflection();
+        this.handler = new ChartInvocationHandler(this.factory);
+        this.creator = new DynamicProxyChartCreator(this.handler);
+
+        assertThrows(InvalidChartNameException.class, () -> {
+            this.creator.getChartObject("org.jfree.chart.charts.Pie", params);
+        });
+    }
+
+    @Test
     public void testProxyLoadingOfTimeSeriesChartIsCorrect()
             throws ClassNotFoundException, NoSuchMethodException, SecurityException,
-            InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+            InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
+            MissingParamsException, InvalidChartNameException {
         List<Object> params = setUpTimeSeriesChart();
         this.factory = new ChartFactoryReflection();
         this.handler = new ChartInvocationHandler(this.factory);
@@ -173,5 +237,36 @@ public class DynamicProxyChartCreatorTest {
         assertTrue(chart instanceof JFreeChart);
         assertTrue(chart instanceof TimeSeriesChart);
         assertEquals(this.timeSeriesChart, chart);
+    }
+
+    @Test
+    public void testProxyLoadingTimeSeriesChartWillThrowRuntimExceptionForMissingParams()
+            throws ClassNotFoundException, NoSuchMethodException, SecurityException,
+            InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
+            MissingParamsException, InvalidChartNameException {
+        List<Object> params = new ArrayList<>();
+        this.factory = new ChartFactoryReflection();
+        this.handler = new ChartInvocationHandler(this.factory);
+        this.creator = new DynamicProxyChartCreator(this.handler);
+
+        assertThrows(MissingParamsException.class, () -> {
+            this.creator.getChartObject("org.jfree.chart.charts.TimeSeriesChart", params);
+        });
+
+    }
+
+    @Test
+    public void testProxyLoadingTimeSeriesChartWillThrowRuntimExceptionForIncorrectChartName()
+            throws ClassNotFoundException, NoSuchMethodException, SecurityException,
+            InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
+            MissingParamsException, InvalidChartNameException {
+        List<Object> params = new ArrayList<>();
+        this.factory = new ChartFactoryReflection();
+        this.handler = new ChartInvocationHandler(this.factory);
+        this.creator = new DynamicProxyChartCreator(this.handler);
+
+        assertThrows(InvalidChartNameException.class, () -> {
+            this.creator.getChartObject("org.jfree.chart.charts.Time", params);
+        });
     }
 }

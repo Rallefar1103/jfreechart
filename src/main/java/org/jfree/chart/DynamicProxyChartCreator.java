@@ -4,6 +4,8 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Proxy;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class DynamicProxyChartCreator {
     private ChartInvocationHandler handler;
@@ -15,17 +17,34 @@ public class DynamicProxyChartCreator {
     public JFreeChart getChartObject(String chartType, List<Object> params)
             throws NoSuchMethodException, SecurityException,
             IllegalAccessException, IllegalArgumentException, InvocationTargetException, ClassNotFoundException,
-            InstantiationException {
+            InstantiationException, MissingParamsException, InvalidChartNameException {
+        Class<?> classObj;
+        Constructor<?> chartConstructor;
+        Object chartObj;
+
         IReflectionFactory proxyFactory = (IReflectionFactory) Proxy.newProxyInstance(
                 ChartFactoryReflection.class.getClassLoader(),
                 new Class[] { IReflectionFactory.class }, this.handler);
 
-        Class<?> classObj = Class.forName(chartType);
-        Constructor<?> chartConstructor = classObj.getConstructor();
+        if (!classNamePatternFound(chartType)) {
+            classObj = null;
+            chartObj = null;
+        } else {
+            classObj = Class.forName(chartType);
+            chartConstructor = classObj.getConstructor();
 
-        Object chartObj = chartConstructor.newInstance();
+            chartObj = chartConstructor.newInstance();
+
+        }
 
         return proxyFactory.getChartObject(classObj, chartObj, params);
 
+    }
+
+    private Boolean classNamePatternFound(String className) {
+        Pattern pattern = Pattern.compile("Chart");
+        Matcher matcher = pattern.matcher(className);
+        boolean result = matcher.find();
+        return result;
     }
 }
