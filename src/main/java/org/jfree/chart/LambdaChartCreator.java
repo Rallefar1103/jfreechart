@@ -10,7 +10,7 @@ public class LambdaChartCreator {
         reflectionFactory = new ChartFactoryReflection();
     }
 
-    JFreeChart createChart(String chartType, List<Object> parameters)
+    public JFreeChart createChart(String chartType, List<Object> parameters)
             throws ClassNotFoundException, NoSuchMethodException, SecurityException, InstantiationException,
             IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         ICreateChart obj = (type, params) -> {
@@ -24,6 +24,14 @@ public class LambdaChartCreator {
 
         };
         return obj.createChart(chartType, parameters);
+    }
+
+    public <T, D, R> R createChart(NewChart<T, D, R> func, T type, T title, T category, T value, D dataset) {
+        return func.create(type, title, category, value, dataset);
+    }
+
+    public <T, D, R> R createChart(NewChartAlt<T, D, R> func, T type, T title, D dataset) {
+        return func.create(type, title, dataset);
     }
 
 }
