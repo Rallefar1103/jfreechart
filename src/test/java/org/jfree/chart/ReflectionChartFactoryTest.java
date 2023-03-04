@@ -4,7 +4,9 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import org.jfree.chart.charts.BarChart;
@@ -16,13 +18,15 @@ import org.jfree.data.time.Month;
 import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
 
-public class ChartFactoryTest {
+public class ReflectionChartFactoryTest {
+    private Object chartObj;
     private JFreeChart barChart;
     private JFreeChart pieChart;
     private JFreeChart timeSeriesChart;
     private ChartFactoryReflection reflectionFactory;
 
-    public List<Object> setUpBarChart() {
+    public List<Object> setUpBarChart() throws ClassNotFoundException, NoSuchMethodException, SecurityException,
+            InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
         dataset.addValue(7445, "JFreeSVG", "Warm-up");
         dataset.addValue(24448, "Batik", "Warm-up");
@@ -39,13 +43,18 @@ public class ChartFactoryTest {
         parameters.add("Miliseconds");
         parameters.add(dataset);
 
+        var classObj = Class.forName("org.jfree.chart.charts.BarChart");
+        Constructor<?> chartConstructor = classObj.getConstructor();
+
+        this.chartObj = chartConstructor.newInstance();
         this.barChart = ChartFactory.getChartRegular("BarChart", "Performance: JFreeSVG vs Batik", "Miliseconds",
                 "Miliseconds",
                 dataset);
         return parameters;
     }
 
-    public List<Object> setUpPieChart() {
+    public List<Object> setUpPieChart() throws ClassNotFoundException, NoSuchMethodException, SecurityException,
+            InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         String title = "Smart Phones Manufactured / Q3 2011";
         DefaultPieDataset dataset = new DefaultPieDataset();
         dataset.setValue("Samsung", new Double(27.8));
@@ -60,12 +69,18 @@ public class ChartFactoryTest {
         parameters.add(true);
         parameters.add(true);
 
+        var classObj = Class.forName("org.jfree.chart.charts.PieChart");
+        Constructor<?> chartConstructor = classObj.getConstructor();
+
+        this.chartObj = chartConstructor.newInstance();
         this.pieChart = ChartFactory.getChartRegular("PieChart", title, null, null, dataset);
 
         return parameters;
     }
 
-    public List<Object> setUpTimeSeriesChart() {
+    public List<Object> setUpTimeSeriesChart() throws ClassNotFoundException, InstantiationException,
+            IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException,
+            SecurityException {
         String title = "Legal & General Unit Trust Prices";
         String timeAxisLabel = "Date";
         String valueAxisLabel = "Price per Unit";
@@ -119,6 +134,11 @@ public class ChartFactoryTest {
         parameters.add(timeAxisLabel);
         parameters.add(valueAxisLabel);
         parameters.add(dataset);
+
+        var classObj = Class.forName("org.jfree.chart.charts.TimeSeriesChart");
+        Constructor<?> chartConstructor = classObj.getConstructor();
+
+        this.chartObj = chartConstructor.newInstance();
 
         this.timeSeriesChart = ChartFactory.getChartRegular("TimeSeriesChart", title, timeAxisLabel, valueAxisLabel,
                 dataset);
@@ -230,5 +250,39 @@ public class ChartFactoryTest {
         assertThrows(NoSuchMethodException.class, () -> {
             this.reflectionFactory.getChartReflection("org.jfree.chart.charts.TimeSeriesChart", params);
         });
+    }
+
+    // Testing Dynamic Retrieval of CreateChart Method
+    @Test
+    public void testGetChartMethodFromSignatureReturnsCorrectBarChartMethod()
+            throws ClassNotFoundException, NoSuchMethodException, SecurityException,
+            InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        this.reflectionFactory = new ChartFactoryReflection();
+
+        var method = this.reflectionFactory.getChartMethodFromMethodSignature("org.jfree.chart.charts.BarChart",
+                "public BarChart createChart(String title, String categoryAxisLabel, String valueAxisLabel, DefaultCategoryDataset dataset)");
+        Class<?> classType = method.getReturnType();
+
+        assertTrue(method instanceof Method);
+        assertEquals(BarChart.class, classType);
+    }
+
+    @Test
+    public void testGetCorrectBarChartFromDynamicallyInvokedMethod()
+            throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException,
+            InvocationTargetException, ClassNotFoundException, InstantiationException {
+        this.reflectionFactory = new ChartFactoryReflection();
+        List<Object> params = setUpBarChart();
+        Object[] inputParams = new Object[params.size()];
+
+        for (int i = 0; i < params.size(); i++) {
+            inputParams[i] = params.get(i);
+        }
+
+        var method = this.reflectionFactory.getChartMethodFromMethodSignature("org.jfree.chart.charts.BarChart",
+                "public BarChart createChart(String title, String categoryAxisLabel, String valueAxisLabel, DefaultCategoryDataset dataset)");
+
+        var result = method.invoke(this.chartObj, inputParams);
+        assertEquals(this.barChart, result);
     }
 }

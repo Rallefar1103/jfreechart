@@ -3,9 +3,22 @@ package org.jfree.chart;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.data.general.DefaultPieDataset;
+import org.jfree.data.time.TimeSeriesCollection;
 
 public class ChartFactoryReflection extends ChartFactory implements IReflectionFactory {
+
+    private static final String METHOD_NAME = "methodName";
+    private static final String METHOD_PARAM_NAMES = "methodParamNames";
+    private static final String METHOD_PARAM_TYPES = "methodParamTypes";
+
     ChartFactoryReflection() {
 
     }
@@ -42,5 +55,57 @@ public class ChartFactoryReflection extends ChartFactory implements IReflectionF
         createMethod = classObj.getMethod("createChart", parameterTypes);
         return (JFreeChart) createMethod.invoke(chartObj, inputParams);
 
+    }
+
+    public Method getChartMethodFromMethodSignature(String chartType, String methodAsString)
+            throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException,
+            InvocationTargetException, ClassNotFoundException, InstantiationException {
+        var map = getMethodSigAndParams(methodAsString);
+        if (map != null) {
+            Class<?> classObj = Class.forName(chartType);
+            return classObj.getMethod((String) map.get(METHOD_NAME), (Class<?>[]) map.get(METHOD_PARAM_TYPES));
+        }
+        return null;
+    }
+
+    private Map<String, Object> getMethodSigAndParams(String methodAsString) {
+        Pattern pattern = Pattern.compile("(\\w+)\\((.+)\\)");
+        Matcher matcher = pattern.matcher(methodAsString);
+        Map<String, Object> methodSigAsMap = new HashMap<>();
+        if (matcher.find()) {
+            methodSigAsMap.put(METHOD_NAME, matcher.group(1));
+            String[] paramNames = matcher.group(2).split(",\\s*");
+            methodSigAsMap.put(METHOD_PARAM_NAMES, paramNames);
+
+            Class<?>[] parameterTypes = new Class<?>[paramNames.length];
+            for (int i = 0; i < paramNames.length; i++) {
+                parameterTypes[i] = getClassNameForType(paramNames[i]);
+            }
+
+            methodSigAsMap.put(METHOD_PARAM_TYPES, parameterTypes);
+            return methodSigAsMap;
+        }
+        return null;
+    }
+
+    private Class<?> getClassNameForType(String type) {
+        switch (type) {
+            case "int":
+                return int.class;
+            case "String":
+                return String.class;
+            case "boolean":
+                return Boolean.class;
+            case "Boolean":
+                return Boolean.class;
+            case "DefaultCategoryDataset":
+                return DefaultCategoryDataset.class;
+            case "DefaultPieDataset":
+                return DefaultPieDataset.class;
+            case "TimeSeriesCollection":
+                return TimeSeriesCollection.class;
+            default:
+                return null;
+        }
     }
 }
