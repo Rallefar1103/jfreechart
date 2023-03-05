@@ -199,6 +199,15 @@ public class BarChart extends JFreeChart {
 
         }
 
+        public BarChart createChart(String title, String categoryAxisLabel, String valueAxisLabel,
+                        DefaultCategoryDataset dataset, PlotOrientation orientation, Boolean legend, Boolean tooltips,
+                        Boolean urls) {
+                return (BarChart) createBarChart(title,
+                                categoryAxisLabel, valueAxisLabel,
+                                dataset, orientation,
+                                legend, tooltips, urls);
+        }
+
         @Override
         public BarChart createChart(String title, String categoryAxisLabel, String valueAxisLabel,
                         DefaultCategoryDataset dataset) {
@@ -208,7 +217,6 @@ public class BarChart extends JFreeChart {
         @Override
         public JFreeChart createChart(String title, DefaultPieDataset dataset, Boolean legend, Boolean tooltips,
                         Boolean urls) {
-                // TODO Auto-generated method stub
                 return null;
         }
 

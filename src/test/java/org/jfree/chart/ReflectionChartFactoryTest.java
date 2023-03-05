@@ -12,6 +12,7 @@ import java.util.List;
 import org.jfree.chart.charts.BarChart;
 import org.jfree.chart.charts.PieChart;
 import org.jfree.chart.charts.TimeSeriesChart;
+import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.general.DefaultPieDataset;
 import org.jfree.data.time.Month;
@@ -281,6 +282,66 @@ public class ReflectionChartFactoryTest {
 
         var method = this.reflectionFactory.getChartMethodFromMethodSignature("org.jfree.chart.charts.BarChart",
                 "public BarChart createChart(String title, String categoryAxisLabel, String valueAxisLabel, DefaultCategoryDataset dataset)");
+
+        var result = method.invoke(this.chartObj, inputParams);
+        assertEquals(this.barChart, result);
+    }
+
+    @Test
+    public void testGetChartMethodFromSignatureReturnsCorrectAlternativeBarChartMethod()
+            throws ClassNotFoundException, NoSuchMethodException, SecurityException,
+            InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        this.reflectionFactory = new ChartFactoryReflection();
+
+        var method = this.reflectionFactory.getChartMethodFromMethodSignature("org.jfree.chart.charts.BarChart",
+                "public BarChart createChart(String title, String categoryAxisLabel, String valueAxisLabel, DefaultCategoryDataset dataset, PlotOrientation orientation, Boolean legend, Boolean tooltips, Boolean urls)");
+        Class<?> classType = method.getReturnType();
+
+        assertTrue(method instanceof Method);
+        assertEquals(BarChart.class, classType);
+    }
+
+    @Test
+    public void testGetCorrectBarChartAlternativeFromDynamicallyInvokedMethod()
+            throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException,
+            InvocationTargetException, ClassNotFoundException, InstantiationException {
+        this.reflectionFactory = new ChartFactoryReflection();
+        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+        dataset.addValue(7445, "JFreeSVG", "Warm-up");
+        dataset.addValue(24448, "Batik", "Warm-up");
+        dataset.addValue(4297, "JFreeSVG", "Test");
+        dataset.addValue(21022, "Batik", "Test");
+        dataset.addValue(7445, "JFreeSVG", "Warm-up");
+        dataset.addValue(24448, "Batik", "Warm-up");
+        dataset.addValue(4297, "JFreeSVG", "Test");
+        dataset.addValue(21022, "Batik", "Test");
+
+        List<Object> parameters = new ArrayList<Object>();
+        parameters.add("Performance: JFreeSVG vs Batik");
+        parameters.add("Miliseconds");
+        parameters.add("Miliseconds");
+        parameters.add(dataset);
+        parameters.add(PlotOrientation.VERTICAL);
+        parameters.add(true);
+        parameters.add(true);
+        parameters.add(true);
+
+        var classObj = Class.forName("org.jfree.chart.charts.BarChart");
+        Constructor<?> chartConstructor = classObj.getConstructor();
+
+        this.chartObj = chartConstructor.newInstance();
+
+        Object[] inputParams = new Object[parameters.size()];
+
+        for (int i = 0; i < parameters.size(); i++) {
+            inputParams[i] = parameters.get(i);
+        }
+
+        this.barChart = BarChart.createBarChart("Performance: JFreeSVG vs Batik", "Miliseconds", "Miliseconds", dataset,
+                PlotOrientation.VERTICAL, true, true, true);
+
+        var method = this.reflectionFactory.getChartMethodFromMethodSignature("org.jfree.chart.charts.BarChart",
+                "public BarChart createChart(String title, String categoryAxisLabel, String valueAxisLabel, DefaultCategoryDataset dataset, PlotOrientation orientation, Boolean legend, Boolean tooltips, Boolean urls)");
 
         var result = method.invoke(this.chartObj, inputParams);
         assertEquals(this.barChart, result);

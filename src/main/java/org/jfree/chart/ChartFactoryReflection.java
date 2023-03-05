@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.general.DefaultPieDataset;
 import org.jfree.data.time.TimeSeriesCollection;
@@ -89,23 +90,25 @@ public class ChartFactoryReflection extends ChartFactory implements IReflectionF
     }
 
     private Class<?> getClassNameForType(String type) {
-        switch (type) {
-            case "int":
-                return int.class;
-            case "String":
-                return String.class;
-            case "boolean":
-                return Boolean.class;
-            case "Boolean":
-                return Boolean.class;
-            case "DefaultCategoryDataset":
-                return DefaultCategoryDataset.class;
-            case "DefaultPieDataset":
-                return DefaultPieDataset.class;
-            case "TimeSeriesCollection":
-                return TimeSeriesCollection.class;
-            default:
-                return null;
+        if (type.contains("int")) {
+            return int.class;
+        } else if (type.contains("String")) {
+            return String.class;
+        } else if (type.contains("Boolean") || type.contains("boolean")) {
+            return Boolean.class;
+        } else if (type.contains("DefaultCategoryDataset")) {
+            return DefaultCategoryDataset.class;
+        } else if (type.contains("DefaultPieDataset")) {
+            return DefaultPieDataset.class;
+        } else if (type.contains("TimeSeriesCollection")) {
+            return TimeSeriesCollection.class;
+        } else if (type.contains("PlotOrientation")) {
+            return PlotOrientation.class;
         }
+
+        else {
+            return null;
+        }
+
     }
 }
