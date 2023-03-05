@@ -1,8 +1,9 @@
-/** 
+/**
  * JFreeChart module.
  */
 module org.jfree.chart {
     requires java.desktop;
+
     exports org.jfree.chart;
     exports org.jfree.chart.annotations;
     exports org.jfree.chart.api;
@@ -29,8 +30,8 @@ module org.jfree.chart {
     exports org.jfree.chart.util;
     exports org.jfree.data;
     exports org.jfree.data.category;
-    exports org.jfree.data.flow;    
-    exports org.jfree.data.function;    
+    exports org.jfree.data.flow;
+    exports org.jfree.data.function;
     exports org.jfree.data.gantt;
     exports org.jfree.data.general;
     exports org.jfree.data.io;
@@ -40,4 +41,6 @@ module org.jfree.chart {
     exports org.jfree.data.time.ohlc;
     exports org.jfree.data.xml;
     exports org.jfree.data.xy;
+    exports org.jfree.chart.charts;
+
 }
