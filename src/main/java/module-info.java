@@ -1,7 +1,7 @@
 /**
  * JFreeChart module.
  */
-module org.jfree.chart {
+module org.jfree.jfreechart_dlf {
     requires java.desktop;
 
     exports org.jfree.chart;
