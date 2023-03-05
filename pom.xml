@@ -31,8 +31,8 @@
         <system>GitHub Issues</system>
     </issueManagement>
     <scm>
-        <connection>scm:git:git:https://github.com/jfree/jfreechart.git</connection>
-        <url>https://github.com/jfree/jfreechart</url>
+        <connection>scm:git:git:https://github.com/Rallefar1103/jfreechartdlf.git</connection>
+        <url>https://github.com/Rallefar1103/jfreechartdlf</url>
     </scm>
 
     <developers>
