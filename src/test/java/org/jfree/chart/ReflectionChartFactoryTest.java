@@ -254,6 +254,50 @@ public class ReflectionChartFactoryTest {
         });
     }
 
+    // Testing that internal ChartLookupTable can convert basic Class Name to
+    // correct corresponding internal package+classname
+    @Test
+    public void testDynamicLoadingOfBarChartIsCorrectUsingLookupTable()
+            throws ClassNotFoundException, NoSuchMethodException, SecurityException,
+            InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        List<Object> params = setUpBarChart();
+        this.reflectionFactory = new ChartFactoryReflection();
+        String classPath = ChartLookupTable.chartLookupTable.get("BarChart");
+        var chart = this.reflectionFactory.getChartReflection(classPath, params);
+
+        assertTrue(chart instanceof JFreeChart);
+        assertTrue(chart instanceof BarChart);
+        assertEquals(this.barChart, chart);
+    }
+
+    @Test
+    public void testDynamicLoadingOfPieCharttIsCorrectUsingLookupTable()
+            throws ClassNotFoundException, NoSuchMethodException, SecurityException,
+            InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        List<Object> params = setUpPieChart();
+        this.reflectionFactory = new ChartFactoryReflection();
+        String classPath = ChartLookupTable.chartLookupTable.get("PieChart");
+        var chart = this.reflectionFactory.getChartReflection(classPath, params);
+
+        assertTrue(chart instanceof JFreeChart);
+        assertTrue(chart instanceof PieChart);
+        assertEquals(this.pieChart, chart);
+    }
+
+    @Test
+    public void testDynamicLoadingOfTimeSeriesCharttIsCorrectUsingLookupTable()
+            throws ClassNotFoundException, NoSuchMethodException, SecurityException,
+            InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        List<Object> params = setUpTimeSeriesChart();
+        this.reflectionFactory = new ChartFactoryReflection();
+        String classPath = ChartLookupTable.chartLookupTable.get("TimeSeriesChart");
+        var chart = this.reflectionFactory.getChartReflection(classPath, params);
+
+        assertTrue(chart instanceof JFreeChart);
+        assertTrue(chart instanceof TimeSeriesChart);
+        assertEquals(this.timeSeriesChart, chart);
+    }
+
     // Testing Dynamic Retrieval of CreateChart Method Using ChartClassName as
     // Parameter
     @Test
