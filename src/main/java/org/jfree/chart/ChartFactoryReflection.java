@@ -20,7 +20,7 @@ public class ChartFactoryReflection extends ChartFactory implements IReflectionF
     private static final String METHOD_PARAM_NAMES = "methodParamNames";
     private static final String METHOD_PARAM_TYPES = "methodParamTypes";
 
-    ChartFactoryReflection() {
+    public ChartFactoryReflection() {
 
     }
 
