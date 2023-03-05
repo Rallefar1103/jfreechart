@@ -21,6 +21,7 @@ import org.jfree.data.time.TimeSeriesCollection;
 
 public class ReflectionChartFactoryTest {
     private Object chartObj;
+    private Class<?> classObj;
     private JFreeChart barChart;
     private JFreeChart pieChart;
     private JFreeChart timeSeriesChart;
@@ -44,7 +45,7 @@ public class ReflectionChartFactoryTest {
         parameters.add("Miliseconds");
         parameters.add(dataset);
 
-        var classObj = Class.forName("org.jfree.chart.charts.BarChart");
+        this.classObj = Class.forName("org.jfree.chart.charts.BarChart");
         Constructor<?> chartConstructor = classObj.getConstructor();
 
         this.chartObj = chartConstructor.newInstance();
@@ -70,7 +71,7 @@ public class ReflectionChartFactoryTest {
         parameters.add(true);
         parameters.add(true);
 
-        var classObj = Class.forName("org.jfree.chart.charts.PieChart");
+        this.classObj = Class.forName("org.jfree.chart.charts.PieChart");
         Constructor<?> chartConstructor = classObj.getConstructor();
 
         this.chartObj = chartConstructor.newInstance();
@@ -136,7 +137,7 @@ public class ReflectionChartFactoryTest {
         parameters.add(valueAxisLabel);
         parameters.add(dataset);
 
-        var classObj = Class.forName("org.jfree.chart.charts.TimeSeriesChart");
+        this.classObj = Class.forName("org.jfree.chart.charts.TimeSeriesChart");
         Constructor<?> chartConstructor = classObj.getConstructor();
 
         this.chartObj = chartConstructor.newInstance();
@@ -253,7 +254,8 @@ public class ReflectionChartFactoryTest {
         });
     }
 
-    // Testing Dynamic Retrieval of CreateChart Method
+    // Testing Dynamic Retrieval of CreateChart Method Using ChartClassName as
+    // Parameter
     @Test
     public void testGetChartMethodFromSignatureReturnsCorrectBarChartMethod()
             throws ClassNotFoundException, NoSuchMethodException, SecurityException,
@@ -326,8 +328,8 @@ public class ReflectionChartFactoryTest {
         parameters.add(true);
         parameters.add(true);
 
-        var classObj = Class.forName("org.jfree.chart.charts.BarChart");
-        Constructor<?> chartConstructor = classObj.getConstructor();
+        this.classObj = Class.forName("org.jfree.chart.charts.BarChart");
+        Constructor<?> chartConstructor = this.classObj.getConstructor();
 
         this.chartObj = chartConstructor.newInstance();
 
@@ -346,4 +348,85 @@ public class ReflectionChartFactoryTest {
         var result = method.invoke(this.chartObj, inputParams);
         assertEquals(this.barChart, result);
     }
+
+    // Testing Dynamic Retrieval of CreateChart Method Using ChartClass as Parameter
+    @Test
+    public void testGetChartMethodFromSignatureAndClassReturnsCorrectBarChartMethod()
+            throws ClassNotFoundException, NoSuchMethodException, SecurityException,
+            InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        this.reflectionFactory = new ChartFactoryReflection();
+        this.classObj = Class.forName("org.jfree.chart.charts.BarChart");
+        var method = this.reflectionFactory.getChartMethodFromMethodSignature(this.classObj,
+                "public BarChart createChart(String title, String categoryAxisLabel, String valueAxisLabel, DefaultCategoryDataset dataset)");
+        Class<?> classType = method.getReturnType();
+
+        assertTrue(method instanceof Method);
+        assertEquals(BarChart.class, classType);
+    }
+
+    @Test
+    public void testGetCorrectBarChartFromDynamicallyInvokedMethodFromMethodSigAndClass()
+            throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException,
+            InvocationTargetException, ClassNotFoundException, InstantiationException {
+        this.reflectionFactory = new ChartFactoryReflection();
+        List<Object> params = setUpBarChart();
+        Object[] inputParams = new Object[params.size()];
+
+        for (int i = 0; i < params.size(); i++) {
+            inputParams[i] = params.get(i);
+        }
+
+        var method = this.reflectionFactory.getChartMethodFromMethodSignature(this.classObj,
+                "public BarChart createChart(String title, String categoryAxisLabel, String valueAxisLabel, DefaultCategoryDataset dataset)");
+
+        var result = method.invoke(this.chartObj, inputParams);
+        assertEquals(this.barChart, result);
+    }
+
+    @Test
+    public void testGetCorrectBarChartAlternativeFromDynamicallyInvokedMethodSigAndClass()
+            throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException,
+            InvocationTargetException, ClassNotFoundException, InstantiationException {
+        this.reflectionFactory = new ChartFactoryReflection();
+        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+        dataset.addValue(7445, "JFreeSVG", "Warm-up");
+        dataset.addValue(24448, "Batik", "Warm-up");
+        dataset.addValue(4297, "JFreeSVG", "Test");
+        dataset.addValue(21022, "Batik", "Test");
+        dataset.addValue(7445, "JFreeSVG", "Warm-up");
+        dataset.addValue(24448, "Batik", "Warm-up");
+        dataset.addValue(4297, "JFreeSVG", "Test");
+        dataset.addValue(21022, "Batik", "Test");
+
+        List<Object> parameters = new ArrayList<Object>();
+        parameters.add("Performance: JFreeSVG vs Batik");
+        parameters.add("Miliseconds");
+        parameters.add("Miliseconds");
+        parameters.add(dataset);
+        parameters.add(PlotOrientation.VERTICAL);
+        parameters.add(true);
+        parameters.add(true);
+        parameters.add(true);
+
+        this.classObj = Class.forName("org.jfree.chart.charts.BarChart");
+        Constructor<?> chartConstructor = this.classObj.getConstructor();
+
+        this.chartObj = chartConstructor.newInstance();
+
+        Object[] inputParams = new Object[parameters.size()];
+
+        for (int i = 0; i < parameters.size(); i++) {
+            inputParams[i] = parameters.get(i);
+        }
+
+        this.barChart = BarChart.createBarChart("Performance: JFreeSVG vs Batik", "Miliseconds", "Miliseconds", dataset,
+                PlotOrientation.VERTICAL, true, true, true);
+
+        var method = this.reflectionFactory.getChartMethodFromMethodSignature(this.classObj,
+                "public BarChart createChart(String title, String categoryAxisLabel, String valueAxisLabel, DefaultCategoryDataset dataset, PlotOrientation orientation, Boolean legend, Boolean tooltips, Boolean urls)");
+
+        var result = method.invoke(this.chartObj, inputParams);
+        assertEquals(this.barChart, result);
+    }
+
 }

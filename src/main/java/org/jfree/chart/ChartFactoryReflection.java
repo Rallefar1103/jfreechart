@@ -58,6 +58,15 @@ public class ChartFactoryReflection extends ChartFactory implements IReflectionF
 
     }
 
+    public Method getChartMethodFromMethodSignature(Class<?> chartClass, String methodAsString)
+            throws NoSuchMethodException, SecurityException {
+        var map = getMethodSigAndParams(methodAsString);
+        if (map != null) {
+            return chartClass.getMethod((String) map.get(METHOD_NAME), (Class<?>[]) map.get(METHOD_PARAM_TYPES));
+        }
+        return null;
+    }
+
     public Method getChartMethodFromMethodSignature(String chartType, String methodAsString)
             throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException,
             InvocationTargetException, ClassNotFoundException, InstantiationException {
