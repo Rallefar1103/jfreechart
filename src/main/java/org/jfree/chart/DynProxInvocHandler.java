@@ -13,16 +13,7 @@ public class DynProxInvocHandler implements InvocationHandler {
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-        if (method.getName().equalsIgnoreCase("draw")) {
-            //
-        } else if (method.getName().equalsIgnoreCase("setSubtitles")) {
-            //
-        } else {
-            //
-        }
-
-        Object returnResult = method.invoke(this.targetChart, args);
-        return returnResult;
+        return method.invoke(this.targetChart, args);
 
     }
 

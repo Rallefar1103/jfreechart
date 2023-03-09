@@ -19,6 +19,7 @@ import org.jfree.chart.plot.Plot;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.data.general.DefaultPieDataset;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
+import org.jfree.chart.title.TextTitle;
 import org.jfree.chart.title.Title;
 import org.jfree.chart.urls.StandardXYURLGenerator;
 import org.jfree.chart.urls.XYURLGenerator;
@@ -143,12 +144,12 @@ public class TimeSeriesChart extends JFreeChart
     }
 
     @Override
-    public void setSubtitlesOnChart(List<Title> subtitles) {
-        super.setSubtitles(subtitles);
+    public void setBackgroundPaintOnChart(Paint paint) {
+        super.setBackgroundPaint(paint);
     }
 
     @Override
-    public void setBackgroundPaintOnChart(Paint paint) {
-        super.setBackgroundPaint(paint);
+    public void setTitleOnChart(TextTitle title) {
+        super.setTitle(title);
     }
 }

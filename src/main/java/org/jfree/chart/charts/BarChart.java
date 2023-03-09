@@ -23,6 +23,7 @@ import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.renderer.category.BarRenderer;
 import org.jfree.chart.renderer.category.StackedBarRenderer;
 import org.jfree.chart.text.TextAnchor;
+import org.jfree.chart.title.TextTitle;
 import org.jfree.chart.title.Title;
 import org.jfree.chart.urls.StandardCategoryURLGenerator;
 import org.jfree.data.category.CategoryDataset;
@@ -241,13 +242,13 @@ public class BarChart extends JFreeChart implements IChart {
         }
 
         @Override
-        public void setSubtitlesOnChart(List<Title> subtitles) {
-                super.setSubtitles(subtitles);
+        public void setBackgroundPaintOnChart(Paint paint) {
+                super.setBackgroundPaint(paint);
         }
 
         @Override
-        public void setBackgroundPaintOnChart(Paint paint) {
-                super.setBackgroundPaint(paint);
+        public void setTitleOnChart(TextTitle title) {
+                super.setTitle(title);
         }
 
 }

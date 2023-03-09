@@ -3,6 +3,7 @@ package org.jfree.chart;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
+import org.jfree.chart.title.TextTitle;
 import org.jfree.chart.title.Title;
 
 import java.awt.Graphics2D;
@@ -16,7 +17,7 @@ public interface IDynamicProxy {
                         throws ClassNotFoundException, NoSuchMethodException, SecurityException, IllegalAccessException,
                         IllegalArgumentException, InvocationTargetException;
 
-        void setSubtitles(List<Title> subtitles)
+        void setTitle(TextTitle title)
                         throws ClassNotFoundException, NoSuchMethodException, SecurityException, IllegalAccessException,
                         IllegalArgumentException, InvocationTargetException;
 

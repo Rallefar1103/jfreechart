@@ -5,6 +5,7 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.List;
 
+import org.jfree.chart.title.TextTitle;
 import org.jfree.chart.title.Title;
 
 import java.awt.Paint;
@@ -39,11 +40,11 @@ public class DynamicProxyStrategy implements IDynamicProxy {
     }
 
     @Override
-    public void setSubtitles(List<Title> subtitles) throws ClassNotFoundException, NoSuchMethodException,
-            SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+    public void setTitle(TextTitle title) throws ClassNotFoundException, NoSuchMethodException, SecurityException,
+            IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         IChart proxyChart = (IChart) Proxy.newProxyInstance(JFreeChart.class.getClassLoader(),
                 new Class[] { IChart.class }, this.invocationHandler);
-        proxyChart.setSubtitlesOnChart(subtitles);
+        proxyChart.setTitleOnChart(title);
     }
 
 }

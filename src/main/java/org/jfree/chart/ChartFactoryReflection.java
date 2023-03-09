@@ -10,6 +10,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.chart.title.TextTitle;
+import org.jfree.chart.title.Title;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.general.DefaultPieDataset;
 import org.jfree.data.time.TimeSeriesCollection;
@@ -113,6 +115,9 @@ public class ChartFactoryReflection extends ChartFactory implements IReflectionF
             return TimeSeriesCollection.class;
         } else if (type.contains("PlotOrientation")) {
             return PlotOrientation.class;
+
+        } else if (type.contains("TextTitle")) {
+            return TextTitle.class;
         }
 
         else {

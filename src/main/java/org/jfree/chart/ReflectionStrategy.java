@@ -4,22 +4,24 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 
+import org.jfree.chart.title.TextTitle;
+
 public class ReflectionStrategy implements IReflection {
 
     private ChartFactoryReflection factory;
-    private String chartType;
+    public JFreeChart chart;
 
-    public ReflectionStrategy(String chartType) {
+    public ReflectionStrategy(JFreeChart chart) {
         this.factory = new ChartFactoryReflection();
-        this.chartType = chartType;
+        this.chart = chart;
     }
 
     @Override
     public void draw(String methodSigAsString, List<Object> params)
             throws ClassNotFoundException, NoSuchMethodException, SecurityException, IllegalAccessException,
-            IllegalArgumentException, InvocationTargetException {
-        Class<?> classObj = Class.forName(this.chartType);
-        Method draw = this.factory.getChartMethodFromMethodSignature(classObj, methodSigAsString);
+            IllegalArgumentException, InvocationTargetException, InstantiationException {
+
+        Method draw = this.factory.getChartMethodFromMethodSignature(this.chart.getClass(), methodSigAsString);
 
         Object[] inputParams = new Object[params.size()];
 
@@ -27,31 +29,30 @@ public class ReflectionStrategy implements IReflection {
             inputParams[i] = params.get(i);
         }
 
-        draw.invoke(classObj, inputParams);
+        draw.invoke(this.chart, inputParams);
     }
 
     @Override
-    public void setSubtitles(String methodSigAsString, List<Object> params)
+    public void setTitle(String methodSigAsString, TextTitle title)
             throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, ClassNotFoundException,
-            NoSuchMethodException, SecurityException {
-        Class<?> classObj = Class.forName(this.chartType);
-        Method setSub = this.factory.getChartMethodFromMethodSignature(classObj, methodSigAsString);
+            NoSuchMethodException, SecurityException, InstantiationException {
 
-        Object[] inputParams = new Object[params.size()];
+        Method setTitle = this.factory.getChartMethodFromMethodSignature(this.chart.getClass(), methodSigAsString);
 
-        for (int i = 0; i < params.size(); i++) {
-            inputParams[i] = params.get(i);
-        }
+        Object[] inputParams = new Object[1];
 
-        setSub.invoke(classObj, inputParams);
+        inputParams[0] = title;
+
+        setTitle.invoke(this.chart, inputParams);
     }
 
     @Override
     public void setBackgroundPaint(String methodSigAsString, List<Object> params)
             throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException,
             SecurityException, ClassNotFoundException {
-        Class<?> classObj = Class.forName(this.chartType);
-        Method setBackground = this.factory.getChartMethodFromMethodSignature(classObj, methodSigAsString);
+
+        Method setBackground = this.factory.getChartMethodFromMethodSignature(this.chart.getClass(),
+                methodSigAsString);
 
         Object[] inputParams = new Object[params.size()];
 
@@ -59,7 +60,7 @@ public class ReflectionStrategy implements IReflection {
             inputParams[i] = params.get(i);
         }
 
-        setBackground.invoke(classObj, inputParams);
+        setBackground.invoke(this.chart, inputParams);
     }
 
 }

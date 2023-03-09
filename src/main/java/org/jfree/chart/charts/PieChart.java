@@ -428,13 +428,13 @@ public class PieChart extends JFreeChart implements IChart {
     }
 
     @Override
-    public void setSubtitlesOnChart(List<Title> subtitles) {
-        super.setSubtitles(subtitles);
+    public void setBackgroundPaintOnChart(Paint paint) {
+        super.setBackgroundPaint(paint);
     }
 
     @Override
-    public void setBackgroundPaintOnChart(Paint paint) {
-        super.setBackgroundPaint(paint);
+    public void setTitleOnChart(TextTitle title) {
+        super.setTitle(title);
     }
 
 }
