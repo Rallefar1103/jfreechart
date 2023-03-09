@@ -1,7 +1,14 @@
 package org.jfree.chart.charts;
 
 import java.awt.Font;
+import java.awt.Graphics2D;
+import java.awt.Paint;
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
+import java.util.List;
 
+import org.jfree.chart.ChartRenderingInfo;
+import org.jfree.chart.IChart;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.DateAxis;
 import org.jfree.chart.axis.NumberAxis;
@@ -12,6 +19,7 @@ import org.jfree.chart.plot.Plot;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.data.general.DefaultPieDataset;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
+import org.jfree.chart.title.Title;
 import org.jfree.chart.urls.StandardXYURLGenerator;
 import org.jfree.chart.urls.XYURLGenerator;
 import org.jfree.data.category.DefaultCategoryDataset;
@@ -20,7 +28,8 @@ import org.jfree.data.general.PieDataset;
 import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.data.xy.XYDataset;
 
-public class TimeSeriesChart extends JFreeChart {
+public class TimeSeriesChart extends JFreeChart
+        implements IChart {
 
     public TimeSeriesChart(String title, Font titleFont, Plot plot, boolean createLegend) {
         super(title, titleFont, plot, createLegend);
@@ -126,5 +135,20 @@ public class TimeSeriesChart extends JFreeChart {
             Boolean urls) {
         // TODO Auto-generated method stub
         return null;
+    }
+
+    @Override
+    public void drawChart(Graphics2D g2, Rectangle2D chartArea, Point2D anchor, ChartRenderingInfo info) {
+        super.draw(g2, chartArea, anchor, info);
+    }
+
+    @Override
+    public void setSubtitlesOnChart(List<Title> subtitles) {
+        super.setSubtitles(subtitles);
+    }
+
+    @Override
+    public void setBackgroundPaintOnChart(Paint paint) {
+        super.setBackgroundPaint(paint);
     }
 }
