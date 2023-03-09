@@ -33,7 +33,7 @@ public class ReflectionStrategy implements IReflection {
     }
 
     @Override
-    public void setTitle(String methodSigAsString, TextTitle title)
+    public void setTitle(String methodSigAsString, List<Object> params)
             throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, ClassNotFoundException,
             NoSuchMethodException, SecurityException, InstantiationException {
 
@@ -41,7 +41,7 @@ public class ReflectionStrategy implements IReflection {
 
         Object[] inputParams = new Object[1];
 
-        inputParams[0] = title;
+        inputParams[0] = params.get(0);
 
         setTitle.invoke(this.chart, inputParams);
     }

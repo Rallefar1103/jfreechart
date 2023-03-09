@@ -28,7 +28,38 @@ public class ReflectionStrategyTest {
     private ChartFactoryReflection factory;
 
     @Test
-    public void testingReflectionStrategy() throws ClassNotFoundException, NoSuchMethodException, SecurityException,
+    public void testingReflectionStrategySetTitle()
+            throws ClassNotFoundException, NoSuchMethodException, SecurityException,
+            InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+        dataset.addValue(7445, "JFreeSVG", "Warm-up");
+        dataset.addValue(24448, "Batik", "Warm-up");
+        dataset.addValue(4297, "JFreeSVG", "Test");
+        dataset.addValue(21022, "Batik", "Test");
+        dataset.addValue(7445, "JFreeSVG", "Warm-up");
+        dataset.addValue(24448, "Batik", "Warm-up");
+        dataset.addValue(4297, "JFreeSVG", "Test");
+        dataset.addValue(21022, "Batik", "Test");
+
+        this.factory = new ChartFactoryReflection();
+        BarChart chart = (BarChart) ChartFactory.getChartRegular("BarChart", "null", "Category", "Value", dataset);
+        ReflectionStrategy strategy = new ReflectionStrategy(chart);
+        List<Object> params = new ArrayList();
+
+        String expectedTitle = "TitleTest";
+        TextTitle testTitle = new TextTitle(expectedTitle);
+        params.add(testTitle);
+
+        strategy.setTitle("public void setTitleOnChart(TextTitle title)", params);
+
+        String actualTitle = strategy.chart.getTitle().getText();
+
+        assertEquals(expectedTitle, actualTitle);
+    }
+
+    @Test
+    public void testingReflectionStrategySetTitleTwo()
+            throws ClassNotFoundException, NoSuchMethodException, SecurityException,
             InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
         dataset.addValue(7445, "JFreeSVG", "Warm-up");
@@ -44,14 +75,15 @@ public class ReflectionStrategyTest {
         BarChart chart = (BarChart) ChartFactory.getChartRegular("BarChart", "null", "Category", "Value", dataset);
         ReflectionStrategy strategy = new ReflectionStrategy(chart);
 
+        List<Object> params = new ArrayList();
         String expectedTitle = "TitleTest";
-        TextTitle testTitle = new TextTitle(expectedTitle);
+        String testTitle = expectedTitle;
 
-        strategy.setTitle("public void setTitleOnChart(TextTitle title)", testTitle);
+        params.add(testTitle);
+        strategy.setTitle("public void setTitleOnChart(String title)", params);
 
         String actualTitle = strategy.chart.getTitle().getText();
 
         assertEquals(expectedTitle, actualTitle);
-
     }
 }

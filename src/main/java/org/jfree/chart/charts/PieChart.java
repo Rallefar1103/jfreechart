@@ -437,4 +437,9 @@ public class PieChart extends JFreeChart implements IChart {
         super.setTitle(title);
     }
 
+    @Override
+    public void setTitleOnChart(String title) {
+        super.setTitle(title);
+    }
+
 }

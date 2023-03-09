@@ -152,4 +152,9 @@ public class TimeSeriesChart extends JFreeChart
     public void setTitleOnChart(TextTitle title) {
         super.setTitle(title);
     }
+
+    @Override
+    public void setTitleOnChart(String title) {
+        super.setTitle(title);
+    }
 }

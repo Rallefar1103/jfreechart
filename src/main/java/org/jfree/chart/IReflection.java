@@ -11,7 +11,7 @@ public interface IReflection {
                         throws ClassNotFoundException, NoSuchMethodException, SecurityException, IllegalAccessException,
                         IllegalArgumentException, InvocationTargetException, InstantiationException;
 
-        void setTitle(String methodSigAsString, TextTitle title)
+        void setTitle(String methodSigAsString, List<Object> params)
                         throws ClassNotFoundException, NoSuchMethodException, SecurityException, IllegalAccessException,
                         IllegalArgumentException, InvocationTargetException, InstantiationException;
 

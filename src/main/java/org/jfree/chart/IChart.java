@@ -15,5 +15,7 @@ public interface IChart {
 
     public void setTitleOnChart(TextTitle title);
 
+    public void setTitleOnChart(String title);
+
     public void setBackgroundPaintOnChart(Paint paint);
 }
