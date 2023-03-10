@@ -8,6 +8,12 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
+import java.awt.Graphics2D;
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
+import org.jfree.chart.charts.BarChart;
+
 import org.jfree.chart.charts.BarChart;
 import org.jfree.chart.charts.PieChart;
 import org.jfree.chart.plot.CategoryPlot;
@@ -44,7 +50,7 @@ public class LambdaStrategyTest {
         String expectedTitle = "TitleTest";
         TextTitle testChartTitle = new TextTitle(expectedTitle);
 
-        this.strategy = new LambdaStrategy<TextTitle>();
+        this.strategy = new LambdaStrategy<>();
 
         ISetTitle<TextTitle> function = (title) -> chart.setTitle(title);
 
@@ -72,7 +78,7 @@ public class LambdaStrategyTest {
         BarChart chart = (BarChart) ChartFactory.getChartRegular("BarChart", "null", "Category", "Value", dataset);
         String expectedTitle = "TitleTest";
 
-        this.strategy = new LambdaStrategy<String>();
+        this.strategy = new LambdaStrategy<>();
 
         ISetTitle<String> function = (title) -> chart.setTitle(title);
 
@@ -82,5 +88,31 @@ public class LambdaStrategyTest {
 
         assertEquals(expectedTitle, actualTitle);
 
+    }
+
+    @Test
+    public void testingLambdaStrategyDraw() throws ClassNotFoundException, NoSuchMethodException, SecurityException,
+            IllegalAccessException, IllegalArgumentException, InvocationTargetException, InstantiationException {
+        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+        dataset.addValue(7445, "JFreeSVG", "Warm-up");
+        dataset.addValue(24448, "Batik", "Warm-up");
+        dataset.addValue(4297, "JFreeSVG", "Test");
+        dataset.addValue(21022, "Batik", "Test");
+        dataset.addValue(7445, "JFreeSVG", "Warm-up");
+        dataset.addValue(24448, "Batik", "Warm-up");
+        dataset.addValue(4297, "JFreeSVG", "Test");
+        dataset.addValue(21022, "Batik", "Test");
+
+        BarChart chart = (BarChart) ChartFactory.getChartRegular("BarChart", "null", "Category", "Value", dataset);
+        this.strategy = new LambdaStrategy<>();
+
+        BufferedImage image = new BufferedImage(200, 100,
+                BufferedImage.TYPE_INT_RGB);
+        Graphics2D g2 = image.createGraphics();
+        Rectangle2D rect = new Rectangle2D.Double(0, 0, 200, 100);
+
+        IDraw<Graphics2D, Rectangle2D> function = (graphics, rectangle) -> chart.draw(graphics, rectangle);
+
+        this.strategy.draw(function, g2, rect);
     }
 }

@@ -3,8 +3,8 @@ package org.jfree.chart;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
-public interface ILambda<T> {
-        void draw(String methodSigAsString, List<Object> params)
+public interface ILambda<T, R> {
+        void draw(IDraw<T, R> draw, T g2, R rect)
                         throws ClassNotFoundException, NoSuchMethodException, SecurityException, IllegalAccessException,
                         IllegalArgumentException, InvocationTargetException, InstantiationException;
 

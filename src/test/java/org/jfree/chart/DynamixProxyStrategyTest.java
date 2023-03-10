@@ -8,6 +8,12 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
+import java.awt.Graphics2D;
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
+import org.jfree.chart.charts.BarChart;
+
 import org.jfree.chart.charts.BarChart;
 import org.jfree.chart.charts.PieChart;
 import org.jfree.chart.plot.CategoryPlot;
@@ -52,6 +58,31 @@ public class DynamixProxyStrategyTest {
 
         assertEquals(expectedTitle, actualTitle);
 
+    }
+
+    @Test
+    public void testingDynamicProxyStrategyDraw() throws ClassNotFoundException, NoSuchMethodException,
+            SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+        dataset.addValue(7445, "JFreeSVG", "Warm-up");
+        dataset.addValue(24448, "Batik", "Warm-up");
+        dataset.addValue(4297, "JFreeSVG", "Test");
+        dataset.addValue(21022, "Batik", "Test");
+        dataset.addValue(7445, "JFreeSVG", "Warm-up");
+        dataset.addValue(24448, "Batik", "Warm-up");
+        dataset.addValue(4297, "JFreeSVG", "Test");
+        dataset.addValue(21022, "Batik", "Test");
+
+        BufferedImage image = new BufferedImage(200, 100,
+                BufferedImage.TYPE_INT_RGB);
+        Graphics2D g2 = image.createGraphics();
+        Rectangle2D rect = new Rectangle2D.Double(0, 0, 200, 100);
+
+        BarChart chart = (BarChart) ChartFactory.getChartRegular("BarChart", "null", "Category", "Value", dataset);
+        this.invocationHandler = new DynProxInvocHandler(chart);
+        DynamicProxyStrategy strategy = new DynamicProxyStrategy(this.invocationHandler);
+
+        strategy.draw(g2, rect, null, null);
     }
 
 }
