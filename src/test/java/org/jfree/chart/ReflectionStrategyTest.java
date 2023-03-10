@@ -8,6 +8,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
+import java.awt.Graphics2D;
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
 import org.jfree.chart.charts.BarChart;
 import org.jfree.chart.charts.PieChart;
 import org.jfree.chart.plot.CategoryPlot;
@@ -82,5 +86,38 @@ public class ReflectionStrategyTest {
         String actualTitle = strategy.chart.getTitle().getText();
 
         assertEquals(expectedTitle, actualTitle);
+    }
+
+    @Test
+    public void testingReflectionStrategyDraw() throws ClassNotFoundException, NoSuchMethodException, SecurityException,
+            IllegalAccessException, IllegalArgumentException, InvocationTargetException, InstantiationException {
+        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+        dataset.addValue(7445, "JFreeSVG", "Warm-up");
+        dataset.addValue(24448, "Batik", "Warm-up");
+        dataset.addValue(4297, "JFreeSVG", "Test");
+        dataset.addValue(21022, "Batik", "Test");
+        dataset.addValue(7445, "JFreeSVG", "Warm-up");
+        dataset.addValue(24448, "Batik", "Warm-up");
+        dataset.addValue(4297, "JFreeSVG", "Test");
+        dataset.addValue(21022, "Batik", "Test");
+
+        BarChart chart = (BarChart) ChartFactory.getChartRegular("BarChart", "null", "Category", "Value", dataset);
+        ReflectionStrategy strategy = new ReflectionStrategy(chart);
+
+        BufferedImage image = new BufferedImage(200, 100,
+                BufferedImage.TYPE_INT_RGB);
+        Graphics2D g2 = image.createGraphics();
+        Rectangle2D rect = new Rectangle2D.Double(0, 0, 200, 100);
+
+        List<Object> params = new ArrayList<Object>();
+        params.add(g2);
+        params.add(rect);
+        params.add(null);
+        params.add(null);
+
+        strategy.draw(
+                "public void drawChart(Graphics2D g2, Rectangle2D chartArea, Point2D anchor, ChartRenderingInfo info)",
+                params);
+
     }
 }

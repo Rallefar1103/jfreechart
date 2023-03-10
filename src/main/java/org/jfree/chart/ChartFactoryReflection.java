@@ -9,6 +9,11 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import java.awt.Graphics2D;
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
+import org.jfree.chart.charts.BarChart;
+
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.title.TextTitle;
 import org.jfree.chart.title.Title;
@@ -101,8 +106,8 @@ public class ChartFactoryReflection extends ChartFactory implements IReflectionF
     }
 
     private Class<?> getClassNameForType(String type) {
-        if (type.contains("int")) {
-            return int.class;
+        if (type.contains("Point2D")) {
+            return Point2D.class;
         } else if (type.contains("String")) {
             return String.class;
         } else if (type.contains("Boolean") || type.contains("boolean")) {
@@ -118,6 +123,14 @@ public class ChartFactoryReflection extends ChartFactory implements IReflectionF
 
         } else if (type.contains("TextTitle")) {
             return TextTitle.class;
+        } else if (type.contains("Graphics2D")) {
+            return Graphics2D.class;
+        } else if (type.contains("Rectangle2D")) {
+            return Rectangle2D.class;
+        } else if (type.contains("int")) {
+            return Integer.class;
+        } else if (type.contains("ChartRenderingInfo")) {
+            return ChartRenderingInfo.class;
         }
 
         else {

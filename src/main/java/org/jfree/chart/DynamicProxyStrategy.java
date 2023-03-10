@@ -3,10 +3,8 @@ package org.jfree.chart;
 import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-import java.util.List;
 
 import org.jfree.chart.title.TextTitle;
-import org.jfree.chart.title.Title;
 
 import java.awt.Paint;
 import java.lang.reflect.InvocationTargetException;
