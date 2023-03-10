@@ -12,6 +12,8 @@ import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+import java.awt.Paint;
+import java.awt.Color;
 import org.jfree.chart.charts.BarChart;
 import org.jfree.chart.charts.PieChart;
 import org.jfree.chart.plot.CategoryPlot;
@@ -119,5 +121,34 @@ public class ReflectionStrategyTest {
                 "public void drawChart(Graphics2D g2, Rectangle2D chartArea, Point2D anchor, ChartRenderingInfo info)",
                 params);
 
+    }
+
+    //
+    @Test
+    public void testingReflectionStrategySetBackgroundPaint()
+            throws ClassNotFoundException, NoSuchMethodException, SecurityException,
+            InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+        dataset.addValue(7445, "JFreeSVG", "Warm-up");
+        dataset.addValue(24448, "Batik", "Warm-up");
+        dataset.addValue(4297, "JFreeSVG", "Test");
+        dataset.addValue(21022, "Batik", "Test");
+        dataset.addValue(7445, "JFreeSVG", "Warm-up");
+        dataset.addValue(24448, "Batik", "Warm-up");
+        dataset.addValue(4297, "JFreeSVG", "Test");
+        dataset.addValue(21022, "Batik", "Test");
+
+        BarChart chart = (BarChart) ChartFactory.getChartRegular("BarChart", "Title", "Category", "Value", dataset);
+        ReflectionStrategy strategy = new ReflectionStrategy(chart);
+
+        List<Object> params = new ArrayList<Object>();
+        Paint expectedBackground = Color.WHITE;
+
+        params.add(expectedBackground);
+        strategy.setBackgroundPaint("public void setBackgroundPaintOnChart(Paint paint)", params);
+
+        Paint actualBackground = strategy.chart.getBackgroundPaint();
+
+        assertEquals(expectedBackground, actualBackground);
     }
 }

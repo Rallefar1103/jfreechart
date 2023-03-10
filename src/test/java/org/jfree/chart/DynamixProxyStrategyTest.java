@@ -12,6 +12,8 @@ import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+import java.awt.Paint;
+import java.awt.Color;
 import org.jfree.chart.charts.BarChart;
 
 import org.jfree.chart.charts.BarChart;
@@ -83,6 +85,32 @@ public class DynamixProxyStrategyTest {
         DynamicProxyStrategy strategy = new DynamicProxyStrategy(this.invocationHandler);
 
         strategy.draw(g2, rect, null, null);
+    }
+
+    @Test
+    public void testingDynamicProxyStrategySetBackground() throws ClassNotFoundException, NoSuchMethodException,
+            SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+        dataset.addValue(7445, "JFreeSVG", "Warm-up");
+        dataset.addValue(24448, "Batik", "Warm-up");
+        dataset.addValue(4297, "JFreeSVG", "Test");
+        dataset.addValue(21022, "Batik", "Test");
+        dataset.addValue(7445, "JFreeSVG", "Warm-up");
+        dataset.addValue(24448, "Batik", "Warm-up");
+        dataset.addValue(4297, "JFreeSVG", "Test");
+        dataset.addValue(21022, "Batik", "Test");
+
+        BarChart chart = (BarChart) ChartFactory.getChartRegular("BarChart", "Title", "Category", "Value", dataset);
+        this.invocationHandler = new DynProxInvocHandler(chart);
+        DynamicProxyStrategy strategy = new DynamicProxyStrategy(this.invocationHandler);
+
+        Paint expectedBackground = Color.WHITE;
+
+        strategy.setBackgroundPaint(expectedBackground);
+
+        Paint actualBackground = this.invocationHandler.targetChart.getBackgroundPaint();
+
+        assertEquals(expectedBackground, actualBackground);
     }
 
 }

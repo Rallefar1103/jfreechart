@@ -3,8 +3,8 @@ package org.jfree.chart;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
-public interface ILambda<T, R> {
-        void draw(IDraw<T, R> draw, T g2, R rect)
+public interface ILambda<T, G, R, P> {
+        void draw(IDraw<G, R> draw, G g2, R rect)
                         throws ClassNotFoundException, NoSuchMethodException, SecurityException, IllegalAccessException,
                         IllegalArgumentException, InvocationTargetException, InstantiationException;
 
@@ -12,7 +12,7 @@ public interface ILambda<T, R> {
                         throws ClassNotFoundException, NoSuchMethodException, SecurityException, IllegalAccessException,
                         IllegalArgumentException, InvocationTargetException, InstantiationException;
 
-        void setBackgroundPaint(String methodSigAsString, List<Object> params)
+        void setBackgroundPaint(ISetBackground<P> setBackground, P paint)
                         throws ClassNotFoundException, NoSuchMethodException, SecurityException, IllegalAccessException,
                         IllegalArgumentException, InvocationTargetException;
 }

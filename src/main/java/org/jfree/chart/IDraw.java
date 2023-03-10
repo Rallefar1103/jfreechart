@@ -1,5 +1,5 @@
 package org.jfree.chart;
 
-public interface IDraw<T, R> {
-    void draw(T g2, R rect);
+public interface IDraw<G, R> {
+    void draw(G g2, R rect);
 }

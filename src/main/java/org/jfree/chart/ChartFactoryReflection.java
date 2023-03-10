@@ -12,6 +12,7 @@ import java.util.regex.Pattern;
 import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.awt.Paint;
 import org.jfree.chart.charts.BarChart;
 
 import org.jfree.chart.plot.PlotOrientation;
@@ -108,6 +109,9 @@ public class ChartFactoryReflection extends ChartFactory implements IReflectionF
     private Class<?> getClassNameForType(String type) {
         if (type.contains("Point2D")) {
             return Point2D.class;
+        } else if (type.contains("Paint")) {
+            return Paint.class;
+
         } else if (type.contains("String")) {
             return String.class;
         } else if (type.contains("Boolean") || type.contains("boolean")) {

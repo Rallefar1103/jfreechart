@@ -12,6 +12,8 @@ import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+import java.awt.Paint;
+import java.awt.Color;
 import org.jfree.chart.charts.BarChart;
 
 import org.jfree.chart.charts.BarChart;
@@ -114,5 +116,33 @@ public class LambdaStrategyTest {
         IDraw<Graphics2D, Rectangle2D> function = (graphics, rectangle) -> chart.draw(graphics, rectangle);
 
         this.strategy.draw(function, g2, rect);
+    }
+
+    @Test
+    public void testingLambdaStrategySetBackground()
+            throws ClassNotFoundException, NoSuchMethodException, SecurityException,
+            IllegalAccessException, IllegalArgumentException, InvocationTargetException, InstantiationException {
+        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+        dataset.addValue(7445, "JFreeSVG", "Warm-up");
+        dataset.addValue(24448, "Batik", "Warm-up");
+        dataset.addValue(4297, "JFreeSVG", "Test");
+        dataset.addValue(21022, "Batik", "Test");
+        dataset.addValue(7445, "JFreeSVG", "Warm-up");
+        dataset.addValue(24448, "Batik", "Warm-up");
+        dataset.addValue(4297, "JFreeSVG", "Test");
+        dataset.addValue(21022, "Batik", "Test");
+
+        BarChart chart = (BarChart) ChartFactory.getChartRegular("BarChart", "Title", "Category", "Value", dataset);
+        this.strategy = new LambdaStrategy<>();
+
+        Paint expectedBackground = Color.WHITE;
+
+        ISetBackground<Paint> function = (paint) -> chart.setBackgroundPaint(paint);
+
+        this.strategy.setBackgroundPaint(function, expectedBackground);
+
+        Paint actualBackground = chart.getBackgroundPaint();
+
+        assertEquals(expectedBackground, actualBackground);
     }
 }

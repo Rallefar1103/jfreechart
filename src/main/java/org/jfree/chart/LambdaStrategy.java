@@ -1,18 +1,14 @@
 package org.jfree.chart;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.List;
 
-import org.jfree.chart.title.TextTitle;
-
-public class LambdaStrategy<T, R> implements ILambda<T, R> {
+public class LambdaStrategy<T, G, R, P> implements ILambda<T, G, R, P> {
 
     @Override
-    public void setBackgroundPaint(String methodSigAsString, List<Object> params)
+    public void draw(IDraw<G, R> drawFunc, G g2, R rect)
             throws ClassNotFoundException, NoSuchMethodException, SecurityException, IllegalAccessException,
-            IllegalArgumentException, InvocationTargetException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'setBackgroundPaint'");
+            IllegalArgumentException, InvocationTargetException, InstantiationException {
+        drawFunc.draw(g2, rect);
     }
 
     @Override
@@ -23,10 +19,10 @@ public class LambdaStrategy<T, R> implements ILambda<T, R> {
     }
 
     @Override
-    public void draw(IDraw<T, R> drawFunc, T g2, R rect)
+    public void setBackgroundPaint(ISetBackground<P> setBackgroundFunc, P paint)
             throws ClassNotFoundException, NoSuchMethodException, SecurityException, IllegalAccessException,
-            IllegalArgumentException, InvocationTargetException, InstantiationException {
-        drawFunc.draw(g2, rect);
+            IllegalArgumentException, InvocationTargetException {
+        setBackgroundFunc.setBackground(paint);
     }
 
 }
