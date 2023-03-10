@@ -24,12 +24,13 @@ import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
 import org.junit.jupiter.api.Test;
 
-public class ReflectionStrategyTest {
+public class LambdaStrategyTest {
+    private LambdaStrategy strategy;
 
     @Test
-    public void testingReflectionStrategySetTitle()
+    public void testingLambdaStrategySetTitleUsingTextTitle()
             throws ClassNotFoundException, NoSuchMethodException, SecurityException,
-            InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+            IllegalAccessException, IllegalArgumentException, InvocationTargetException, InstantiationException {
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
         dataset.addValue(7445, "JFreeSVG", "Warm-up");
         dataset.addValue(24448, "Batik", "Warm-up");
@@ -39,26 +40,26 @@ public class ReflectionStrategyTest {
         dataset.addValue(24448, "Batik", "Warm-up");
         dataset.addValue(4297, "JFreeSVG", "Test");
         dataset.addValue(21022, "Batik", "Test");
-
         BarChart chart = (BarChart) ChartFactory.getChartRegular("BarChart", "null", "Category", "Value", dataset);
-        ReflectionStrategy strategy = new ReflectionStrategy(chart);
-        List<Object> params = new ArrayList<Object>();
-
         String expectedTitle = "TitleTest";
-        TextTitle testTitle = new TextTitle(expectedTitle);
-        params.add(testTitle);
+        TextTitle testChartTitle = new TextTitle(expectedTitle);
 
-        strategy.setTitle("public void setTitleOnChart(TextTitle title)", params);
+        this.strategy = new LambdaStrategy<TextTitle>();
 
-        String actualTitle = strategy.chart.getTitle().getText();
+        ISetTitle<TextTitle> function = (title) -> chart.setTitle(title);
+
+        this.strategy.setTitle(function, testChartTitle);
+
+        String actualTitle = chart.getTitle().getText();
 
         assertEquals(expectedTitle, actualTitle);
+
     }
 
     @Test
-    public void testingReflectionStrategySetTitleTwo()
+    public void testingLambdaStrategySetTitleUsingString()
             throws ClassNotFoundException, NoSuchMethodException, SecurityException,
-            InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+            IllegalAccessException, IllegalArgumentException, InvocationTargetException, InstantiationException {
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
         dataset.addValue(7445, "JFreeSVG", "Warm-up");
         dataset.addValue(24448, "Batik", "Warm-up");
@@ -68,19 +69,18 @@ public class ReflectionStrategyTest {
         dataset.addValue(24448, "Batik", "Warm-up");
         dataset.addValue(4297, "JFreeSVG", "Test");
         dataset.addValue(21022, "Batik", "Test");
-
         BarChart chart = (BarChart) ChartFactory.getChartRegular("BarChart", "null", "Category", "Value", dataset);
-        ReflectionStrategy strategy = new ReflectionStrategy(chart);
-
-        List<Object> params = new ArrayList<Object>();
         String expectedTitle = "TitleTest";
-        String testTitle = expectedTitle;
 
-        params.add(testTitle);
-        strategy.setTitle("public void setTitleOnChart(String title)", params);
+        this.strategy = new LambdaStrategy<String>();
 
-        String actualTitle = strategy.chart.getTitle().getText();
+        ISetTitle<String> function = (title) -> chart.setTitle(title);
+
+        this.strategy.setTitle(function, expectedTitle);
+
+        String actualTitle = chart.getTitle().getText();
 
         assertEquals(expectedTitle, actualTitle);
+
     }
 }
