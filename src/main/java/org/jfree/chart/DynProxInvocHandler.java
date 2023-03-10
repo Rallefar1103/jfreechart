@@ -5,7 +5,7 @@ import java.lang.reflect.Method;
 
 public class DynProxInvocHandler implements InvocationHandler {
 
-    private JFreeChart targetChart;
+    public JFreeChart targetChart;
 
     public DynProxInvocHandler(JFreeChart chartTarget) {
         this.targetChart = chartTarget;

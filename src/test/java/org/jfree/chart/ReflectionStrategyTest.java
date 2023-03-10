@@ -44,7 +44,7 @@ public class ReflectionStrategyTest {
         this.factory = new ChartFactoryReflection();
         BarChart chart = (BarChart) ChartFactory.getChartRegular("BarChart", "null", "Category", "Value", dataset);
         ReflectionStrategy strategy = new ReflectionStrategy(chart);
-        List<Object> params = new ArrayList();
+        List<Object> params = new ArrayList<Object>();
 
         String expectedTitle = "TitleTest";
         TextTitle testTitle = new TextTitle(expectedTitle);
@@ -75,7 +75,7 @@ public class ReflectionStrategyTest {
         BarChart chart = (BarChart) ChartFactory.getChartRegular("BarChart", "null", "Category", "Value", dataset);
         ReflectionStrategy strategy = new ReflectionStrategy(chart);
 
-        List<Object> params = new ArrayList();
+        List<Object> params = new ArrayList<Object>();
         String expectedTitle = "TitleTest";
         String testTitle = expectedTitle;
 
